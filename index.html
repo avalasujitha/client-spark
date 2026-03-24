@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ClientSpark</title>
+
+<style>
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.container{
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    width:320px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+h2{
+    text-align:center;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#007bff;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+ul{
+    margin-top:15px;
+    padding:0;
+}
+
+li{
+    list-style:none;
+    padding:10px;
+    background:#f1f1f1;
+    margin-top:5px;
+    border-radius:5px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<h2>ClientSpark</h2>
+
+<input id="name" placeholder="Client Name">
+<input id="email" placeholder="Client Email">
+<input id="interaction" placeholder="Interactions (number)">
+
+<button onclick="addClient()">Add Client</button>
+
+<ul id="list"></ul>
+</div>
+
+<script>
+
+// Load data from localStorage
+let clients = JSON.parse(localStorage.getItem("clients")) || [];
+
+// Predict status
+function predict(interaction){
+    return interaction > 5 ? "🔥 Active" : "⚠️ Inactive";
+}
+
+// Add client
+function addClient(){
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const interactionInput = document.getElementById("interaction");
+
+    const client = {
+        name: nameInput.value,
+        email: emailInput.value,
+        interaction: Number(interactionInput.value)
+    };
+
+    clients.push(client);
+    localStorage.setItem("clients", JSON.stringify(clients));
+
+    loadClients();
+
+    // Clear inputs
+    nameInput.value = "";
+    emailInput.value = "";
+    interactionInput.value = "";
+}
+
+// Load clients
+function loadClients(){
+
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    clients.forEach(c=>{
+        list.innerHTML += `
+        <li>
+        <b>${c.name}</b><br>
+        ${c.email}<br>
+        ${predict(c.interaction)}
+        </li>`;
+    });
+}
+
+// Initial load
+loadClients();
+
+</script>
+
+</body>
+</html>
